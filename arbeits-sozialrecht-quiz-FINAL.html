@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arbeits- und Sozialrecht – Block 2 Quiz</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
+  .top-bar { background: #fff; border-bottom: 2px solid #c8a84b; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+  .top-bar h1 { font-size: 15px; font-weight: 600; color: #333; }
+  .top-bar .info { font-size: 13px; color: #666; }
+  .mode-badge { font-size: 12px; background: #e8f1fb; color: #185fa5; padding: 3px 10px; border-radius: 12px; font-weight: 500; }
+  .progress-wrap { background: #e0e0e0; height: 5px; }
+  .progress-fill { height: 5px; background: #c8a84b; transition: width 0.4s ease; }
+  .container { max-width: 780px; margin: 0 auto; padding: 24px 16px 60px; }
+  .score-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .score-card { background: #fff; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #e0e0e0; }
+  .score-card .num { font-size: 26px; font-weight: 600; }
+  .score-card .lbl { font-size: 12px; color: #888; margin-top: 2px; }
+  .score-card.total .num { color: #333; }
+  .score-card.correct .num { color: #2e7d32; }
+  .score-card.wrong .num { color: #c62828; }
+  .q-card { background: #fff; border: 1px solid #c8a84b; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .q-category { text-align: center; color: #c8a84b; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+  .q-number { font-size: 12px; color: #999; margin-bottom: 6px; }
+  .q-text { font-size: 15px; font-weight: 600; line-height: 1.5; margin-bottom: 18px; color: #1a1a1a; }
+  .option { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: background 0.15s, border-color 0.15s; user-select: none; }
+  .option:hover:not(.disabled) { background: #faf5e4; border-color: #c8a84b; }
+  .option.correct  { background: #e8f5e9; border-color: #2e7d32; cursor: default; }
+  .option.wrong    { background: #ffebee; border-color: #c62828; cursor: default; }
+  .option.reveal   { background: #e8f5e9; border-color: #2e7d32; cursor: default; }
+  .option.disabled { cursor: default; }
+  .checkbox { width: 20px; height: 20px; border: 2px solid #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .option.correct .checkbox { background: #2e7d32; border-color: #2e7d32; color: #fff; }
+  .option.wrong   .checkbox { background: #c62828; border-color: #c62828; color: #fff; }
+  .option.reveal  .checkbox { background: #2e7d32; border-color: #2e7d32; color: #fff; }
+  .opt-text { font-size: 14px; line-height: 1.45; color: #1a1a1a; }
+  .feedback { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13px; line-height: 1.5; display: none; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: #e8f5e9; color: #1b5e20; border-left: 3px solid #2e7d32; }
+  .feedback.ko { background: #ffebee; color: #b71c1c; border-left: 3px solid #c62828; }
+  .btn-row { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn { padding: 10px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+  .btn-gold { background: #c8a84b; color: #fff; }
+  .btn-gold:hover:not(:disabled) { background: #b8943b; }
+  .btn-blue { background: #185fa5; color: #fff; }
+  .btn-blue:hover { background: #0e4a85; }
+  .result-screen { text-align: center; padding: 40px 20px; }
+  .result-screen .big { font-size: 60px; font-weight: 700; }
+  .result-screen .sub { font-size: 16px; color: #666; margin-top: 8px; }
+  .pass-badge { display: inline-block; margin-top: 14px; padding: 6px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+  .pass { background: #e8f5e9; color: #1b5e20; }
+  .fail { background: #ffebee; color: #b71c1c; }
+  .mode-row { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .mode-btn { padding: 7px 16px; border: 1px solid #ccc; border-radius: 20px; font-size: 13px; cursor: pointer; background: #fff; color: #555; transition: all 0.15s; }
+  .mode-btn.active { background: #c8a84b; border-color: #c8a84b; color: #fff; font-weight: 600; }
+  .mode-btn:hover:not(.active) { border-color: #c8a84b; color: #c8a84b; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>Arbeits- und Sozialrecht (Block 2)</h1>
+  <div class="info" id="top-info">Frage 1 von 56</div>
+  <div class="mode-badge">Übungs-Modus</div>
+</div>
+<div class="progress-wrap"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+<div class="container">
+  <div class="score-row">
+    <div class="score-card total"><div class="num" id="s-total">0</div><div class="lbl">Beantwortet</div></div>
+    <div class="score-card correct"><div class="num" id="s-correct">0</div><div class="lbl">Richtig ✓</div></div>
+    <div class="score-card wrong"><div class="num" id="s-wrong">0</div><div class="lbl">Falsch ✗</div></div>
+  </div>
+  <div class="mode-row">
+    <button class="mode-btn active" onclick="setMode('all')"   id="m-all">Alle Fragen (56)</button>
+    <button class="mode-btn"        onclick="setMode('wrong')" id="m-wrong">Nur Falsche</button>
+    <button class="mode-btn"        onclick="shuffleQ()"       id="m-shuffle">Zufällig mischen</button>
+  </div>
+  <div id="quiz-area"></div>
+</div>
+
+<script>
+const Q = [
+{q:"1.) Wie entsteht ein Arbeitsverhältnis und was muss den Arbeitnehmern ausgehändigt werden?",opts:["Nur durch schriftlichen Vertrag — kein weiteres Dokument nötig.","Durch behördliche Genehmigung — der Arbeitnehmer erhält eine Lohnbescheinigung.","Ein Arbeitsverhältnis entsteht durch einen Arbeitsvertrag (Übereinkunft) zwischen Arbeitgeber und Arbeitnehmer. Dem Arbeitnehmer muss ein Dienstzettel ausgehändigt werden.","Nur durch mündliche Vereinbarung — ein Dienstzettel ist freiwillig."],correct:2,explain:"Ein Arbeitsverhältnis entsteht durch einen Arbeitsvertrag (Übereinkunft) zwischen Arbeitgeber und Arbeitnehmer. Dem Arbeitnehmer muss ein Dienstzettel ausgehändigt werden."},
+
+{q:"2.) Welche Pflichten haben Arbeitnehmer in einem Arbeitsverhältnis?",opts:["Lohnzahlungspflicht, Fürsorgepflicht, Urlaubsgewährung, Anmeldepflicht.","Arbeitspflicht (Arbeit persönlich ausführen), Sorgfaltspflicht (Fahrzeuge/Einrichtungen sorgfältig behandeln), Haftpflicht (für verursachte Schäden haften), Treuepflicht (keine wirtschaftlich schädigenden Handlungen), Weisungspflicht (an Weisungen des Arbeitgebers gebunden).","Nur Arbeitspflicht und Schweigepflicht.","Nur Treuepflicht und Haftpflicht."],correct:1,explain:"5 Pflichten: Arbeitspflicht – Arbeit persönlich ausführen. Sorgfaltspflicht – Fahrzeuge/Einrichtungen sorgfältig behandeln. Haftpflicht – für verursachte Schäden haften. Treuepflicht – keine wirtschaftlich schädigenden Handlungen. Weisungspflicht – an Weisungen des Arbeitgebers gebunden."},
+
+{q:"3.) Welche Pflichten haben Arbeitgeber in einem Arbeitsverhältnis?",opts:["Arbeitspflicht, Treuepflicht, Haftpflicht.","Nur Lohnzahlungspflicht und Fürsorgepflicht.","Nur die Pflicht zur Ausstellung eines Dienstzettels.","Anmeldepflicht (AN bei SV anmelden), Fürsorgepflicht (für Wohl und Sicherheit sorgen), Entgeltzahlungspflicht (Gehalt pünktlich zahlen), Entgeltfortzahlungspflicht (gesetzlich vorgeschriebenen Urlaub gewähren)."],correct:3,explain:"Arbeitgeberpflichten: Anmeldepflicht (Arbeitnehmer bei Sozialversicherung anmelden), Fürsorgepflicht (für Wohl und Sicherheit sorgen), Entgeltzahlungspflicht (Gehalt pünktlich zahlen), Entgeltfortzahlungspflicht (gesetzlich vorgeschriebenen Urlaub gewähren)."},
+
+{q:"4.) Was ist die Sozialversicherung?",opts:["Eine freiwillige Versicherung nur für Selbstständige.","Eine staatliche Steuer, die nur Arbeitgeber zahlen.","Eine private Krankenversicherung für Arbeitnehmer.","Die Sozialversicherung in Österreich ist eine Pflichtversicherung für jede arbeitstätige Person. Sie umfasst: Krankenversicherung, Unfallversicherung, Pensionsversicherung, Arbeitslosenversicherung."],correct:3,explain:"Die Sozialversicherung ist eine Pflichtversicherung für jede arbeitstätige Person und umfasst: Krankenversicherung, Unfallversicherung, Pensionsversicherung und Arbeitslosenversicherung."},
+
+{q:"5.) Welche Nachteile haben Arbeitnehmer, wenn sie zum Mindestlohn angemeldet sind, aber mehr verdienen?",opts:["Es gibt keine Nachteile.","Nur der Arbeitgeber muss eine Strafe zahlen.","Der Arbeitnehmer verliert seinen Urlaubsanspruch.","Niedriges Krankengeld / Niedriges Arbeitslosengeld / Niedrige Pension / Niedriges Urlaubsgeld."],correct:3,explain:"Nachteile: Niedriges Krankengeld, niedriges Arbeitslosengeld, niedrige Pension, niedriges Urlaubsgeld — alle SV-Leistungen werden auf Basis des angemeldeten (niedrigeren) Lohns berechnet."},
+
+{q:"6.) Welche Nachteile haben Arbeitnehmer, wenn sie nicht angemeldet ('schwarz') arbeiten?",opts:["Kein Nachteil, solange der Lohn bar bezahlt wird.","Nur der Arbeitgeber wird bestraft.","Der Arbeitnehmer verliert nur den Urlaubsanspruch.","Nicht versichert gegen Krankheit, Unfall, Pension und Arbeitslosigkeit. Sie verlieren alle Ansprüche auf soziale Absicherung und rechtlichen Schutz im Arbeitsverhältnis."],correct:3,explain:"Schwarzarbeit: nicht versichert gegen Krankheit, Unfall, Pension und Arbeitslosigkeit. Verlust aller Ansprüche auf soziale Absicherung und rechtlichen Schutz im Arbeitsverhältnis."},
+
+{q:"7.) Wie können Arbeitnehmer ein Arbeitsverhältnis beenden?",opts:["Nur durch schriftliche Kündigung mit 6 Monaten Frist.","Nur durch mündliche Kündigung.","Nur durch Entlassung oder einvernehmliche Auflösung.","Kündigung / Vorzeitiger Austritt (wenn wichtiger Grund vorliegt) / Einvernehmliche Auflösung / Fristablauf / Auflösung innerhalb der Probezeit."],correct:3,explain:"Arbeitnehmer können beenden durch: Kündigung, vorzeitiger Austritt (bei wichtigem Grund), einvernehmliche Auflösung, Fristablauf (befristeter Vertrag), Auflösung innerhalb der Probezeit."},
+
+{q:"8.) Wie können Arbeitgeber ein Arbeitsverhältnis beenden?",opts:["Nur durch sofortige Entlassung.","Nur durch schriftliche Kündigung mit 3 Monaten Frist.","Nur durch Entlassung nach behördlicher Genehmigung.","Kündigung (mit Kündigungsfrist) / Entlassung (sofort, bei schwerwiegendem Grund) / Einvernehmliche Auflösung / Zeitablauf / Auflösung in der Probezeit / Tod."],correct:3,explain:"Arbeitgeber können beenden durch: Kündigung (mit Kündigungsfrist), Entlassung (sofort bei schwerwiegendem Grund), einvernehmliche Auflösung, Zeitablauf, Probezeit-Auflösung, Tod."},
+
+{q:"9.) Erklären Sie: Kündigung",opts:["Sofortige Beendigung ohne Frist durch den Arbeitgeber.","Beendigung durch behördliche Anordnung.","Beendigung durch den Arbeitnehmer, nur ohne Frist.","Eine Kündigung ist eine einseitige Willenserklärung, die entweder vom Arbeitnehmer oder vom Arbeitgeber ausgehen kann. Sie erfolgt unter Einhaltung der gesetzlichen oder vertraglichen Kündigungsfrist."],correct:3,explain:"Kündigung = einseitige Willenserklärung, die entweder vom Arbeitnehmer oder Arbeitgeber ausgehen kann. Sie erfolgt unter Einhaltung der gesetzlichen oder vertraglichen Kündigungsfrist."},
+
+{q:"10.) Erklären Sie: Entlassung",opts:["Beendigung mit 4-wöchiger Frist durch den Arbeitgeber.","Beendigung durch den Arbeitnehmer aus persönlichen Gründen.","Beendigung nach Ablauf eines befristeten Vertrages.","Eine Entlassung ist die sofortige (fristlose) Auflösung eines Arbeitsverhältnisses durch den Arbeitgeber. Ein schwerwiegender Grund muss vorliegen. Die Entlassung kann mündlich oder schriftlich erfolgen."],correct:3,explain:"Entlassung = sofortige (fristlose) Auflösung durch den Arbeitgeber. Ein schwerwiegender Grund muss vorliegen. Die Entlassung kann mündlich oder schriftlich erfolgen."},
+
+{q:"11.) Erklären Sie: vorzeitiger Austritt",opts:["Kündigung durch den Arbeitnehmer mit normaler Frist.","Beendigung nach gemeinsamer Vereinbarung.","Kündigung des Arbeitgebers aus wirtschaftlichen Gründen.","Ein vorzeitiger Austritt ist die sofortige Auflösung des Arbeitsverhältnisses durch den Arbeitnehmer aus einem wichtigen Grund."],correct:3,explain:"Vorzeitiger Austritt = sofortige Auflösung des Arbeitsverhältnisses durch den Arbeitnehmer aus einem wichtigen Grund."},
+
+{q:"12.) Erklären Sie: einvernehmliche Auflösung eines Dienstverhältnisses",opts:["Beendigung durch den Arbeitgeber ohne Zustimmung des Arbeitnehmers.","Automatische Beendigung nach Ablauf der Probezeit.","Beendigung durch Gerichtsbeschluss.","Eine einvernehmliche Auflösung erfolgt durch die gegenseitige Einigung von Arbeitnehmer und Arbeitgeber. Das Arbeitsverhältnis kann jederzeit ohne Einhaltung einer Frist mündlich oder schriftlich beendet werden."],correct:3,explain:"Einvernehmliche Auflösung = gegenseitige Einigung beider Parteien. Das Arbeitsverhältnis kann jederzeit ohne Frist mündlich oder schriftlich beendet werden."},
+
+{q:"13.) Erklären Sie: Zeitablauf eines Dienstverhältnisses",opts:["Kündigung nach 5 Jahren automatisch.","Beendigung durch den Arbeitgeber nach 10 Jahren.","Automatische Verlängerung des Vertrages nach Ablauf.","Ein befristetes Arbeitsverhältnis endet automatisch nach Ablauf der vereinbarten Zeit, ohne dass eine besondere Auflösungserklärung erforderlich ist."],correct:3,explain:"Zeitablauf: Ein befristetes Arbeitsverhältnis endet automatisch nach Ablauf der vereinbarten Zeit, ohne dass eine besondere Auflösungserklärung erforderlich ist."},
+
+{q:"14.) Wohin wenden sich Arbeitnehmer, wenn der Lohn nicht oder nicht vollständig ausbezahlt wird?",opts:["Direkt zur Polizei.","An das Finanzamt.","An die Wirtschaftskammer.","Arbeitnehmer können sich an die Arbeiterkammer, bzw. an das Arbeits- und Sozialgericht wenden."],correct:3,explain:"Bei Lohnproblemen: an die Arbeiterkammer oder an das Arbeits- und Sozialgericht wenden."},
+
+{q:"15.) Welche wichtigen Bereiche werden im Kollektivvertrag geregelt?",opts:["Nur Arbeitszeiten und Kündigungsfristen.","Nur Mindestlohn und Urlaub.","Steuerregelungen und Sozialversicherungsbeiträge.","Mindestlöhne und Gehälter / Arbeitszeit (inkl. Überstunden, Nachtarbeit) / Überstunden / Urlaub / Abfertigung."],correct:3,explain:"Kollektivvertrag regelt: Mindestlöhne und Gehälter, Arbeitszeit (inkl. Überstunden und Nachtarbeit), Überstunden, Urlaub, Abfertigung."},
+
+{q:"16.) Nennen Sie Unterschiede zwischen einem Arbeitsvertrag und einem Kollektivvertrag.",opts:["Es gibt keine Unterschiede — beide sind gleich.","Kollektivvertrag ist individuell, Arbeitsvertrag gilt für alle.","Beide werden vom Staat festgelegt.","Arbeitsvertrag (Dienstvertrag): zwischen AN und AG, kann freie Vereinbarungen enthalten (höherer Lohn, weniger Arbeitszeit), darf nur Besserstellung enthalten. Kollektivvertrag: zwischen WKO und ÖGB-VIDA, regelt bessere Entlohnung und Arbeitszeiten, darf nur zugunsten der Arbeitnehmer geändert werden."],correct:3,explain:"Arbeitsvertrag: individuell zwischen AN und AG, nur Besserstellungen erlaubt. Kollektivvertrag: zwischen WKO und ÖGB-VIDA, setzt Mindeststandards, darf nur zugunsten der Arbeitnehmer geändert werden."},
+
+{q:"17.) Wer schließt den Kollektivvertrag für das Taxigewerbe ab?",opts:["Zwischen dem Staat und den Taxifahrern.","Zwischen der Polizei und den Taxiunternehmen.","Zwischen dem Verkehrsministerium und den Taxifahrern.","Der Kollektivvertrag für das Taxigewerbe wird zwischen der Wirtschaftskammer Österreich, Sparte Transport und Verkehr (Fachgruppe), und dem Gewerkschaftsbund Österreich (ÖGB-VIDA) abgeschlossen."],correct:3,explain:"KV wird abgeschlossen zwischen: Wirtschaftskammer Österreich, Sparte Transport und Verkehr (Fachgruppe) — und dem Gewerkschaftsbund Österreich (ÖGB-VIDA)."},
+
+{q:"18.) Wie hoch ist der kollektivvertragliche Mindestlohn im Taxigewerbe?",opts:["Genau €1.500 netto pro Monat, unveränderlich.","€2.500 brutto pro Monat.","Es gibt keinen Mindestlohn im Taxigewerbe.","Ab 01.01.2024: €1.880,- Brutto in Wien, zuzüglich Taggeld €10,- pro Kalendertag. Ab 01.01.2025: €2.000,-. Ab 2026: €2.060,-."],correct:3,explain:"Ab 01.01.2024: €1.880,- Brutto (Wien), plus Taggeld €10,-/Kalendertag. Ab 01.01.2025: €2.000,-. Ab 2026: €2.060,-."},
+
+{q:"19.) Für wen und wo gilt der Kollektivvertrag für das Taxigewerbe?",opts:["Nur für selbstständige Taxilenker in Wien.","Nur für Taxiunternehmer mit mehr als 5 Fahrzeugen.","Nur für Taxilenker in Wien und Niederösterreich.","Wo: gilt für das gesamte Bundesgebiet Österreich. Für wen: für Unternehmer und alle Arbeiter, die bei einem Taxiunternehmer in Österreich beschäftigt sind."],correct:3,explain:"Wo: gesamtes Bundesgebiet Österreich. Für wen: Unternehmer und alle Arbeiter, die bei einem Taxiunternehmer in Österreich beschäftigt sind."},
+
+{q:"20.) Was sind die Besonderheiten der Probezeit?",opts:["Probezeit dauert 3 Monate, Kündigung nur durch den Arbeitgeber möglich.","Probezeit dauert 6 Monate mit 2-wöchiger Kündigungsfrist.","Während der Probezeit gibt es keinen Lohnanspruch.","Während der Probezeit kann das Arbeitsverhältnis jederzeit vom Arbeitnehmer oder Arbeitgeber ohne Angabe von Gründen und ohne Kündigungsfrist aufgelöst werden. Die Probezeit dauert in der Regel einen Monat."],correct:3,explain:"Probezeit: jederzeit von beiden Seiten ohne Angabe von Gründen und ohne Kündigungsfrist auflösbar. Dauert in der Regel 1 Monat."},
+
+{q:"21.) Welche Kontrollen müssen Taxilenker bei Inbetriebnahme des Fahrzeuges durchführen?",opts:["Nur Reifendruck und Ölstand prüfen.","Nur den Taxameter auf Funktion prüfen.","Keine Kontrollen — das ist Aufgabe der Werkstätte.","Überprüfung der Bremsen und Lichtanlagen / Kontrolle des Ölstands und Kühlwassers / Überprüfung des Luftdrucks und der Profiltiefe der Reifen / Funktionstüchtigkeit des Taxameters / Überprüfung aller vorgeschriebenen Prüfplaketten / Mitführen der notwendigen Unterlagen (Tarifauszug, Betriebsordnung, europäischer Unfallbericht)."],correct:3,explain:"Kontrollen bei Inbetriebnahme: Bremsen und Lichtanlagen, Ölstand und Kühlwasser, Luftdruck und Profiltiefe der Reifen, Funktionstüchtigkeit des Taxameters, alle Prüfplaketten, Mitführen aller Unterlagen (Tarifauszug, Betriebsordnung, europäischer Unfallbericht)."},
+
+{q:"22.) Normalarbeitszeit / Lenkzeit / tägliche Ruhezeit — was gilt jeweils?",opts:["Arbeitszeit: 8h/Tag, 40h/Woche — Lenkzeit: 8h/Tag — Ruhezeit: 8h.","Keine gesetzliche Beschränkung im Taxigewerbe.","Arbeitszeit: 10h/Tag, 60h/Woche — Lenkzeit: 10h/Tag — Ruhezeit: 10h.","Normalarbeitszeit: max. 12h/Tag, max. 55h/Woche. Lenkzeit: max. 9h/Tag (2x/Woche auf 10h verlängerbar), max. 56h/Woche. Tägliche Ruhezeit: mindestens 11 Stunden."],correct:3,explain:"Normalarbeitszeit: max. 12h/Tag, max. 55h/Woche. Lenkzeit: max. 9h/Tag (2x/Woche auf 10h verlängerbar), max. 56h/Woche. Tägliche Ruhezeit: mindestens 11 Stunden."},
+
+{q:"23.) Wie viel Urlaubs- und Weihnachtsgeld stehen einem Taxilenker zu?",opts:["Je €500 pauschal pro Jahr.","Nur Weihnachtsgeld — kein Urlaubsgeld.","Urlaubs- und Weihnachtsgeld nur nach 5 Jahren Betriebszugehörigkeit.","Bis zu einem Dienstjahr: 3/4 Brutto-KV-Monatslohn. Ab dem zweiten Dienstjahr: 1 Brutto-KV-Monatslohn."],correct:3,explain:"Bis zu einem Dienstjahr: 3/4 Brutto-KV-Monatslohn. Ab dem zweiten Dienstjahr: 1 Brutto-KV-Monatslohn (gilt jeweils für Urlaubs- und Weihnachtsgeld)."},
+
+{q:"24.) Ist es zulässig längere Arbeitszeiten oder weniger Lohn als im Kollektivvertrag zu vereinbaren?",opts:["Ja, wenn der Arbeitnehmer schriftlich zustimmt.","Ja, aber nur für die Probezeit.","Ja, wenn der Arbeitgeber einen Betriebsrat hat.","Nein — Vereinbarungen, die längere Arbeitszeiten oder weniger Lohn als im Kollektivvertrag vorsehen, sind nicht zulässig."],correct:3,explain:"Nein — Vereinbarungen, die längere Arbeitszeiten oder weniger Lohn als im Kollektivvertrag vorsehen, sind nicht zulässig."},
+
+{q:"25.) Sind Vereinbarungen, die Arbeitnehmer schlechter stellen als im Kollektivvertrag, zulässig?",opts:["Ja, mit Zustimmung der Gewerkschaft.","Ja, wenn beide Parteien einverstanden sind.","Nur während der Probezeit erlaubt.","Nein — solche Vereinbarungen sind nicht zulässig."],correct:3,explain:"Nein — solche Vereinbarungen sind nicht zulässig. Der Kollektivvertrag setzt Mindeststandards, die nicht unterschritten werden dürfen."},
+
+{q:"26.) Wer kontrolliert die Einhaltung der Arbeitnehmerschutzvorschriften?",opts:["Die Wirtschaftskammer.","Die Gewerkschaft vida.","Das Bundesheer.","Die Einhaltung der Arbeitnehmerschutzvorschriften wird vom Arbeitsinspektorat kontrolliert."],correct:3,explain:"Die Einhaltung der Arbeitnehmerschutzvorschriften wird vom Arbeitsinspektorat kontrolliert."},
+
+{q:"27.) Haftpflicht als Arbeitnehmerpflicht — was bedeutet das und in welchem Gesetz ist das geregelt?",opts:["Arbeitnehmer haften immer voll für jeden Schaden — im ABGB geregelt.","Arbeitnehmer haften nie für Schäden — nur der Arbeitgeber haftet.","Haftung nur für Schäden an Fahrzeugen — geregelt im KFZ-Gesetz.","Bei schuldhafter Nichterfüllung der Arbeitspflicht oder schuldhafter Nichtbefolgung der Sorgfaltspflicht haftet der Arbeitnehmer. Diese Haftpflicht wird im Dienstnehmerhaftpflichtgesetz geregelt."],correct:3,explain:"Bei schuldhafter Nichterfüllung der Arbeitspflicht oder schuldhafter Nichtbefolgung der Sorgfaltspflicht haftet der Arbeitnehmer. Geregelt im Dienstnehmerhaftpflichtgesetz."},
+
+{q:"28.) Anmeldepflicht als Arbeitgeberpflicht — was bedeutet das?",opts:["Der Arbeitgeber muss den Arbeitnehmer beim Finanzamt anmelden.","Anmeldung beim Arbeitsmarktservice (AMS) ist Pflicht.","Der Arbeitnehmer meldet sich selbst bei der Sozialversicherung an.","Die Anmeldepflicht bedeutet, dass der Arbeitgeber den Arbeitnehmer vor Arbeitsbeginn bei der Sozialversicherung anmelden muss."],correct:3,explain:"Anmeldepflicht: Der Arbeitgeber muss den Arbeitnehmer vor Arbeitsbeginn bei der Sozialversicherung anmelden."},
+
+{q:"29.) Wie lange sind die Kündigungsfristen laut Kollektivvertrag für das Taxigewerbe?",opts:["Immer 4 Wochen, unabhängig von der Betriebszugehörigkeit.","1.–2. Jahr: 2 Wochen — nach 2 Jahren: 1 Monat — nach 5 Jahren: 2 Monate.","Immer 3 Monate, ab dem ersten Tag.","In den ersten 2 Arbeitsjahren: 6 Wochen — ab vollendetem 2. Jahr: 2 Monate — ab vollendetem 5. Jahr: 3 Monate — ab vollendetem 15. Jahr: 4 Monate — ab vollendetem 25. Jahr: 5 Monate."],correct:3,explain:"KV-Taxigewerbe: erste 2 Jahre → 6 Wochen | nach 2 Jahren → 2 Monate | nach 5 Jahren → 3 Monate | nach 15 Jahren → 4 Monate | nach 25 Jahren → 5 Monate."},
+
+{q:"30.) Nennen Sie vier Gründe für einen vorzeitigen Austritt.",opts:["Schlechtes Wetter, weiter Arbeitsweg, zu wenig Fahrgäste, persönliche Gründe.","Nur Lohnausfall ist anerkannt.","Neue Arbeitsstelle, Urlaub verweigert, Wunsch nach Selbstständigkeit, schlechte Prüfungsnoten.","Krankheit oder gesundheitliche Gründe / Ausstehende Lohnzahlungen / Beleidigende Äußerungen / Körperliche und sexuelle Belästigung."],correct:3,explain:"Vier Gründe für vorzeitigen Austritt: Krankheit oder gesundheitliche Gründe, ausstehende Lohnzahlungen, beleidigende Äußerungen, körperliche und sexuelle Belästigung."},
+
+{q:"31.) Nennen Sie vier Gründe für eine Entlassung.",opts:["Zu langsam fahren, Stau, Kunde beschwert sich, schlechte Prüfungsnoten.","Nur Diebstahl ist ein Entlassungsgrund.","Krankheit, Urlaub, Kündigung durch Arbeitnehmer, Fahrzeugschaden.","Grobe Pflichtverletzung / Vertrauensbruch (z.B. Diebstahl oder Betrug) / Unentschuldigtes Fernbleiben von der Arbeit / Alkohol- oder Drogenmissbrauch während der Arbeitszeit."],correct:3,explain:"Vier Entlassungsgründe: Grobe Pflichtverletzung, Vertrauensbruch (z.B. Diebstahl oder Betrug), unentschuldigtes Fernbleiben von der Arbeit, Alkohol- oder Drogenmissbrauch während der Arbeitszeit."},
+
+{q:"32.) Erklären Sie Kündigungsfrist und Kündigungstermin.",opts:["Beides ist dasselbe — der Tag der Kündigung.","Kündigungstermin: Datum der Kündigung. Kündigungsfrist: 1 Jahr.","Beide Begriffe beziehen sich auf die Lohnzahlung nach Kündigung.","Kündigungsfrist: der Zeitraum zwischen dem Ausspruch der Kündigung und dem tatsächlichen Ende des Arbeitsverhältnisses. Kündigungstermin: der Zeitpunkt, an dem das Arbeitsverhältnis offiziell endet."],correct:3,explain:"Kündigungsfrist: Zeitraum zwischen Ausspruch der Kündigung und tatsächlichem Ende. Kündigungstermin: der Zeitpunkt, an dem das Arbeitsverhältnis offiziell endet."},
+
+{q:"33.) Wer bezahlt Beiträge zur Sozialversicherung?",opts:["Nur der Arbeitgeber.","Nur der Arbeitnehmer.","Der Staat bezahlt alle Sozialversicherungsbeiträge.","Die Beiträge zur Sozialversicherung werden sowohl vom Arbeitgeber als auch vom Arbeitnehmer bezahlt."],correct:3,explain:"Die Beiträge zur Sozialversicherung werden sowohl vom Arbeitgeber als auch vom Arbeitnehmer bezahlt."},
+
+{q:"34.) Arbeitnehmer wird während des Urlaubs krank — a) Wie lange Krankenstand? b) Können Tage angehängt werden?",opts:["a) 1 Tag reicht. b) Nein, die Tage verfallen.","a) Mindestens 7 Tage. b) Nur mit Zustimmung des Arbeitgebers.","a) Der Krankenstand unterbricht den Urlaub nie. b) Keine Anhängung möglich.","a) Mindestens 3 Tage Krankenstand, damit der Urlaub unterbrochen wird. b) Ja, die entfallenen Urlaubstage können an den genehmigten Urlaub angehängt werden, wenn der Krankenstand nachweislich mindestens 3 Tage gedauert hat."],correct:3,explain:"a) Krankenstand muss mindestens 3 Tage dauern, damit der Urlaub unterbrochen wird. b) Ja, entfallene Urlaubstage können angehängt werden, wenn Krankenstand nachweislich mindestens 3 Tage dauerte."},
+
+{q:"35.) Was ist ein Dienstzettel? Zählen Sie vier Inhalte auf.",opts:["Ein Steuerformular mit Steuernummer, Betrag, Datum, Unterschrift.","Ein Urlaubsantrag mit Urlaubsdatum, Dauer, Genehmigung, Unterschrift.","Ein Fahrzeugprotokoll mit KFZ-Kennzeichen, Kilometerstand, Schäden, Datum.","Schriftliche Bestätigung des Arbeitgebers über die wesentlichen Rechte und Pflichten aus dem Arbeitsverhältnis. Inhalte: Name und Anschrift von Arbeitgeber und Arbeitnehmer / Beginn des Arbeitsverhältnisses / Art der Beschäftigung / Höhe des Entgelts / Urlaub. Wird vom Arbeitnehmer unterschrieben."],correct:3,explain:"Dienstzettel = schriftliche Bestätigung über die wesentlichen Rechte und Pflichten. Inhalte: Name/Anschrift beider Parteien, Beginn, Art der Beschäftigung, Höhe des Entgelts, Urlaub — wird vom Arbeitnehmer unterschrieben."},
+
+{q:"36.) Wo sind Streitigkeiten aus dem Arbeitsverhältnis auszutragen?",opts:["Beim Bezirksgericht oder beim Finanzamt.","Direkt bei der Polizei oder beim Verfassungsgerichtshof.","Beim Handelsgericht Wien.","Streitigkeiten aus dem Arbeitsverhältnis werden vor dem Arbeits- und Sozialgericht ausgetragen."],correct:3,explain:"Streitigkeiten aus dem Arbeitsverhältnis werden vor dem Arbeits- und Sozialgericht ausgetragen."},
+
+{q:"37.) Wie entsteht der Anspruch auf Urlaubstage im 1. Arbeitsjahr?",opts:["Sofort ab dem ersten Arbeitstag in voller Höhe.","Erst nach 1 Jahr in voller Höhe.","Der Urlaubsanspruch entsteht nach 3 Monaten.","Der Anspruch auf Urlaubstage entsteht nach 6 Monaten Betriebszugehörigkeit. Nach voller Betriebszugehörigkeit (5 Arbeitstage/Woche) besteht ein voller Urlaubsanspruch von 30 Werktagen oder 5 Wochen."],correct:3,explain:"Urlaubsanspruch entsteht nach 6 Monaten Betriebszugehörigkeit. Bei voller Betriebszugehörigkeit (5 Arbeitstage/Woche): voller Urlaubsanspruch = 30 Werktage oder 5 Wochen."},
+
+{q:"38.) Nennen Sie vier Beispiele für die Entgeltfortzahlung.",opts:["Urlaub, Kündigung, Streik, Betriebsausflug.","Nur Krankheit ist ein Grund für Entgeltfortzahlung.","Schlechtes Wetter, Verkehrstau, Fahrzeugpanne, Kundenmangel.","2 Tage Niederkunft der Ehegattin/Lebensgefährtin / 2 Tage eigene Eheschließung / 2 Tage Tod des Ehegatten oder des im Haushalt lebenden Lebensgefährten / 2 Tage Tod der Eltern, Schwiegereltern oder eigenen Kinder / 1 Tag Wohnungswechsel / 1 Tag Teilnahme an Beerdigung von Geschwistern und Großeltern / Bei Krankheit und Arbeitsunfall lt. Entgeltfortzahlungsgesetz."],correct:3,explain:"Entgeltfortzahlung bei: 2 Tage Niederkunft der Ehegattin, 2 Tage eigene Eheschließung, 2 Tage Tod des Ehegatten/Lebensgefährten, 2 Tage Tod der Eltern/Schwiegereltern/Kinder, 1 Tag Wohnungswechsel, Beerdigung, Krankheit und Arbeitsunfall."},
+
+{q:"39.) Wann muss der Schichtwechsel den Dienstnehmern bekannt gegeben werden?",opts:["Am Tag des Schichtwechsels selbst.","Mindestens 1 Monat vorher — nur mündlich.","Keine gesetzliche Frist — nach Vereinbarung.","Der Schichtwechsel muss den Dienstnehmern 24 Stunden vor Dienstbeginn bekannt gegeben werden."],correct:3,explain:"Der Schichtwechsel muss den Dienstnehmern 24 Stunden vor Dienstbeginn bekannt gegeben werden."},
+
+{q:"40.) Was gilt im Taxigewerbe als Nachtarbeit?",opts:["Arbeit zwischen 20:00 und 06:00 Uhr.","Arbeit zwischen 22:00 und 05:00 Uhr.","Arbeit nach Mitternacht bis 06:00 Uhr.","Im Taxigewerbe gilt die Zeit zwischen 00:00 Uhr und 04:00 Uhr als Nachtarbeit."],correct:3,explain:"Im Taxigewerbe gilt die Zeit zwischen 00:00 Uhr und 04:00 Uhr als Nachtarbeit."},
+
+{q:"41.) Wann und in welcher Form sind Ansprüche aus einem Dienstverhältnis im Taxigewerbe geltend zu machen?",opts:["Mündlich — jederzeit, keine Frist.","Schriftlich — innerhalb von 1 Jahr nach Fälligkeit.","Mündlich oder schriftlich — innerhalb von 6 Monaten.","Ansprüche sind innerhalb von 3 Monaten nach Fälligkeit schriftlich und eingeschrieben geltend zu machen."],correct:3,explain:"Ansprüche müssen innerhalb von 3 Monaten nach Fälligkeit schriftlich und eingeschrieben geltend gemacht werden."},
+
+{q:"42.) Wann entfällt der Anspruch auf Urlaubs- und Weihnachtsgeld?",opts:["Der Anspruch entfällt niemals.","Nur bei berechtigter Entlassung.","Nur bei Kündigung durch den Arbeitnehmer.","Der Anspruch entfällt bei: Entlassung / Vorzeitigem Austritt ohne berechtigten Grund."],correct:3,explain:"Der Anspruch auf Urlaubs- und Weihnachtsgeld entfällt bei: Entlassung oder vorzeitigem Austritt ohne berechtigten Grund."},
+
+{q:"43.) Dürfen Urlaubs- und Weihnachtsgeld durch einen höheren Monatslohn ersetzt werden?",opts:["Ja, wenn beide Parteien schriftlich zustimmen.","Ja, aber nur das Urlaubsgeld.","Ja, wenn der Monatslohn mehr als 20% über dem KV-Mindestlohn liegt.","Nein — Urlaubs- und Weihnachtsgeld dürfen nicht durch einen höheren Monatslohn ersetzt werden. Diese Sonderzahlungen sind gesetzlich geregelt und müssen separat gezahlt werden."],correct:3,explain:"Nein — Urlaubs- und Weihnachtsgeld dürfen nicht durch einen höheren Monatslohn ersetzt werden. Diese Sonderzahlungen sind gesetzlich geregelt und müssen separat gezahlt werden."},
+
+{q:"44.) Wie hoch ist das Taggeld pro Kalendertag und wann steht es einem Taxilenker zu?",opts:["€5/Tag — immer bei Nachtarbeit.","€50/Tag — bei Fahrten ins Ausland.","Kein Taggeld im Taxigewerbe.","Das Taggeld beträgt 10 Euro pro Kalendertag, sofern die Fahrtätigkeit länger als drei Stunden dauert."],correct:3,explain:"Das Taggeld beträgt 10 Euro pro Kalendertag, sofern die Fahrtätigkeit länger als drei Stunden dauert."},
+
+{q:"45.) Erklären Sie das Taggeld!",opts:["Taggeld ist der tägliche Grundlohn des Taxilenkers.","Taggeld ist ein Bonus für Überstunden.","Taggeld ist der Sonntagszuschlag laut Kollektivvertrag.","Das Taggeld dient als Abgeltung für den erhöhten Lebensaufwand, der bei Fahrtätigkeiten oder Dienstleistungen außerhalb des Dienstortes entsteht."],correct:3,explain:"Das Taggeld dient als Abgeltung für den erhöhten Lebensaufwand, der bei Fahrtätigkeiten oder Dienstleistungen außerhalb des Dienstortes entsteht."},
+
+{q:"46.) Was tun, wenn während des Betriebes am Fahrzeug Mängel auftreten?",opts:["Weiterfahren und den Mangel nach der Schicht melden.","Den Fahrgast bitten, das Fahrzeug zu überprüfen.","Nur bei schwerwiegenden Mängeln informieren.","Mängel, die während des Betriebes am Fahrzeug auftreten, sind unverzüglich dem Dienstgeber zu melden."],correct:3,explain:"Mängel, die während des Betriebes am Fahrzeug auftreten, sind unverzüglich dem Dienstgeber zu melden."},
+
+{q:"47.) Welche Kontrollpflichten hat der Lenker vor Inbetriebnahme des Fahrzeugs?",opts:["Nur das Kennzeichen und den Führerschein prüfen.","Nur den Taxameter auf Funktion prüfen.","Keine Pflichten — das ist Aufgabe der Werkstätte.","Überprüfung der Bremse, Lichtanlagen, Ölstands, Kühlwasser, Luftdruck und Profiltiefe der Reifen, Funktionstüchtigkeit des Taxameters, Gültigkeit der vorgeschriebenen Prüfplaketten und Mitführen der erforderlichen Unterlagen."],correct:3,explain:"Überprüfung: Bremse, Lichtanlagen, Ölstand, Kühlwasser, Luftdruck und Profiltiefe der Reifen, Funktionstüchtigkeit des Taxameters, Gültigkeit der Prüfplaketten und Mitführen aller erforderlichen Unterlagen."},
+
+{q:"48.) Bei Verlust oder Abnahme des Führerscheins — was ist zu erledigen?",opts:["Einfach weiterfahren bis ein neuer kommt.","Nur den Arbeitgeber nach 2 Wochen informieren.","Führerscheinverlust muss nur dem Finanzamt gemeldet werden.","Der Verlust oder die Abnahme des Führerscheins ist unverzüglich dem Arbeitgeber zu melden."],correct:3,explain:"Der Verlust oder die Abnahme des Führerscheins ist unverzüglich dem Arbeitgeber zu melden."},
+
+{q:"49.) Darf trotz Mängel am Fahrzeug weitergefahren werden?",opts:["Ja, wenn der Fahrgast einverstanden ist.","Ja, für maximal 2 Stunden.","Nur wenn der Mangel nicht das Bremssystem betrifft.","Weiterfahren darf nur, wenn der Lenker vom Dienstgeber ausdrücklich schriftlich dazu ermächtigt wurde. Bei schweren Mängeln, die die Verkehrssicherheit beeinträchtigen, ist die Weiterfahrt nach STVO und KFG untersagt."],correct:3,explain:"Weiterfahren nur bei ausdrücklicher schriftlicher Ermächtigung durch den Dienstgeber. Bei schweren Mängeln (Verkehrssicherheit beeinträchtigend) ist die Weiterfahrt nach STVO und KFG untersagt."},
+
+{q:"50.) Sie haben einen Verkehrsunfall — was ist zu erledigen?",opts:["Einfach weiterfahren wenn kein großer Schaden entstanden ist.","Nur den Arbeitgeber anrufen und auf Anweisung warten.","Fotos machen und den Schaden selbst regulieren.","Die Unfallmeldungen sind sorgfältig und vollständig auszufüllen. Der Unfall ist unverzüglich dem Arbeitgeber nachweislich zu melden. Die Meldung muss spätestens innerhalb von 48 Stunden erfolgen."],correct:3,explain:"Nach Unfall: Unfallmeldungen sorgfältig und vollständig ausfüllen, Unfall unverzüglich dem Arbeitgeber nachweislich melden — spätestens innerhalb von 48 Stunden."},
+
+{q:"51.) Müssen Taxilenker auch an Sonn- und Feiertagen einen Dienst verrichten?",opts:["Nein, Sonn- und Feiertage sind grundsätzlich frei.","Nur an Feiertagen — Sonntage sind immer frei.","Nur wenn der Arbeitnehmer freiwillig arbeiten möchte.","Ja — Taxilenker müssen auch an Sonn- und Feiertagen Dienst verrichten."],correct:3,explain:"Ja — Taxilenker müssen auch an Sonn- und Feiertagen Dienst verrichten."},
+
+{q:"52.) Wann müssen Taxilenker eine Lenkpause machen und wie lange muss diese sein?",opts:["Nach 4,5 Stunden — 45 Minuten Pause.","Nach 6 Stunden — 30 Minuten Pause.","Keine Pausenpflicht im Taxigewerbe.","Nach maximal 4 Stunden Lenkzeit ist eine Lenkpause von mindestens 30 Minuten einzulegen."],correct:3,explain:"Nach maximal 4 Stunden Lenkzeit ist eine Lenkpause von mindestens 30 Minuten einzulegen."},
+
+{q:"53.) Wie hoch ist der Zuschlag bei der Überstundenentlohnung?",opts:["25% Zuschlag.","100% Zuschlag, unabhängig vom Wochentag.","Keine Zuschläge — nur Zeitausgleich möglich.","50% Zuschlag."],correct:3,explain:"50% Zuschlag bei der Überstundenentlohnung."},
+
+{q:"54.) Bei Kündigung durch den Arbeitgeber — wie viel Zeit bekommt man für die Arbeitssuche?",opts:["Keine Zeit — volle Arbeitszeit bis zum Ende.","2 Wochen vollständige Freistellung.","Nur 2 Stunden pro Monat.","Während der Kündigungsfrist steht dem Arbeitnehmer höchstens 1 Arbeitstag pro Woche für die Arbeitssuche zu (Arbeitssuchttage)."],correct:3,explain:"Während der Kündigungsfrist steht dem Arbeitnehmer höchstens 1 Arbeitstag pro Woche für die Arbeitssuche zu (Arbeitssuchttage)."},
+
+{q:"55.) Wird die Zeit für die Arbeitssuche nach einer Kündigung durch den Dienstgeber vom Lohn abgezogen?",opts:["Ja, diese Zeit wird vom Lohn abgezogen.","Nur die Hälfte der Zeit wird abgezogen.","Hängt von der Vereinbarung im Dienstvertrag ab.","Nein — die Zeit für die Arbeitssuche wird nicht vom Lohn abgezogen."],correct:3,explain:"Nein — die Zeit für die Arbeitssuche wird nicht vom Lohn abgezogen."},
+
+{q:"56.) Ist das Nichteinschalten des Taxameters im Stadtgebiet ein Entlassungsgrund?",opts:["Nein, es ist nur eine Ordnungswidrigkeit mit Geldstrafe.","Nur beim dritten Mal ist es ein Entlassungsgrund.","Nein, der Arbeitgeber kann nur eine Verwarnung aussprechen.","Ja — in Gemeinden, in denen die Verwendung eines Fahrpreisanzeigers verpflichtend vorgeschrieben ist, wird das Nichteinschalten entgegen der Bestimmungen der jeweils gültigen Tarif-VO in der Regel einen Entlassungsgrund darstellen."],correct:3,explain:"Ja — in Gemeinden mit Pflicht zur Verwendung eines Fahrpreisanzeigers stellt das Nichteinschalten entgegen der gültigen Tarif-VO in der Regel einen Entlassungsgrund dar."}
+];
+
+let order=[], current=0, answered=false, correct=0, wrong=0, wrongSet=new Set(), mode='all';
+
+function init(m){
+  mode=m||'all'; current=0; correct=0; wrong=0; answered=false;
+  order=(mode==='wrong'&&wrongSet.size>0)?[...wrongSet]:Q.map((_,i)=>i);
+  updateStats(); render();
+}
+
+function shuffleQ(){
+  mode='all'; setActive('m-shuffle'); current=0; correct=0; wrong=0; answered=false;
+  order=Q.map((_,i)=>i).sort(()=>Math.random()-0.5);
+  updateStats(); render();
+}
+
+function setMode(m){
+  mode=m; wrongSet=new Set();
+  setActive(m==='all'?'m-all':'m-wrong'); init(m);
+}
+
+function setActive(id){
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(id); if(el)el.classList.add('active');
+}
+
+function render(){
+  if(current>=order.length){showResult();return;}
+  const idx=order[current], q=Q[idx];
+  const pct=Math.round(((current+1)/order.length)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('top-info').textContent='Frage '+(current+1)+' von '+order.length;
+  let html=`<div class="q-card"><div class="q-category">Arbeits- und Sozialrecht</div><div class="q-number">Frage ${current+1} von ${order.length}</div><div class="q-text">${q.q}</div>`;
+  q.opts.forEach((opt,i)=>{html+=`<div class="option" id="opt${i}" onclick="pick(${i})"><div class="checkbox" id="cb${i}"></div><div class="opt-text">${opt}</div></div>`;});
+  html+=`<div class="feedback" id="feedback"></div><div class="btn-row"><button class="btn btn-gold" id="btn-w" onclick="next()" disabled>Weiter</button></div></div>`;
+  document.getElementById('quiz-area').innerHTML=html;
+  answered=false;
+}
+
+function pick(i){
+  if(answered)return; answered=true;
+  const idx=order[current], q=Q[idx];
+  q.opts.forEach((_,j)=>{
+    const el=document.getElementById('opt'+j), cb=document.getElementById('cb'+j);
+    el.classList.add('disabled');
+    if(j===i&&i===q.correct){el.classList.add('correct');cb.textContent='✓';}
+    else if(j===i){el.classList.add('wrong');cb.textContent='✗';}
+    else if(j===q.correct){el.classList.add('reveal');cb.textContent='✓';}
+  });
+  const fb=document.getElementById('feedback');
+  if(i===q.correct){correct++;fb.className='feedback show ok';fb.textContent='✓ Richtig! — '+q.explain;}
+  else{wrong++;wrongSet.add(idx);fb.className='feedback show ko';fb.textContent='✗ Falsch. — '+q.explain;}
+  document.getElementById('btn-w').disabled=false;
+  updateStats();
+}
+
+function next(){current++;render();}
+
+function updateStats(){
+  document.getElementById('s-total').textContent=current;
+  document.getElementById('s-correct').textContent=correct;
+  document.getElementById('s-wrong').textContent=wrong;
+}
+
+function showResult(){
+  const total=order.length, pct=Math.round((correct/total)*100), pass=pct>=75;
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('top-info').textContent='Fertig!';
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-correct').textContent=correct;
+  document.getElementById('s-wrong').textContent=wrong;
+  document.getElementById('quiz-area').innerHTML=`<div class="q-card result-screen">
+    <div class="q-category">Ergebnis</div>
+    <div class="big">${correct}/${total}</div>
+    <div class="sub">${pct}% richtig beantwortet</div>
+    <div class="pass-badge ${pass?'pass':'fail'}">${pass?'✓ Bestanden':'✗ Nicht bestanden'}</div>
+    <div style="margin-top:24px;font-size:14px;color:#666;line-height:1.7">${wrong>0?`Du hast <strong>${wrong}</strong> Fragen falsch beantwortet.<br>Klicke auf <em>"Nur Falsche"</em> um sie nochmal zu üben!`:'Perfekt! Alle Fragen richtig beantwortet 🎉'}</div>
+    <div style="margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-gold" onclick="init('all')">Nochmal (alle) ↺</button>
+      ${wrong>0?`<button class="btn btn-blue" onclick="setMode('wrong')">Nur Falsche üben</button>`:''}
+    </div>
+  </div>`;
+}
+
+init('all');
+</script>
+</body>
+</html>
